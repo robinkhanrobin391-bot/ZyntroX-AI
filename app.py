@@ -5,12 +5,14 @@ import google.generativeai as genai
 st.set_page_config(page_title="ZyntroX AI", layout="centered")
 st.markdown("""
     <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    div.stDeployButton {display:none;}
-    </style>
-    """, unsafe_allow_html=True)
+    #<style>
+    #MainMenu, footer, header {visibility: hidden;}
+    .stApp {background-color: #121212;}
+    .stChatInput > div {border-radius: 35px !important; background-color: #252525 !important;}
+    div.stButton > button {border-radius: 25px; border: 1px solid #444; background: transparent; color: white; width: 100%;}
+    .stTitle {font-size: 35px !important; text-align: center;}
+</style>
+
 
 st.title("🤖 ZyntroX AI")
 st.markdown("<p style='color: grey;'>Developed by Azam</p>", unsafe_allow_html=True)
