@@ -55,7 +55,8 @@ genai.configure(api_key="AIzaSyB2E2HL2Ky6RUddNzJ_vuO-hpw9BG-d8DA")
 
 # निर्देश और मॉडल सेटिंग
 instruction = "तुम्हारा नाम ZyntroX है। तुम्हें Azam ने बनाया है। तुम हमेशा उन्हें 'मालिक' कहोगे।"
-model = genai.GenerativeModel(model_name='models/gemini-1.5-flash', system_instruction=instruction)
+model = genai.GenerativeModel('gemini-1.5-flash')
+
 
 # स्वागत संदेश
 st.markdown('<div class="main-title">What can I do for you?</div>', unsafe_allow_html=True)
