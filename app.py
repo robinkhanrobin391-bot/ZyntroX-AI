@@ -38,6 +38,7 @@ if prompt := st.chat_input("नमस्ते मालिक, कुछ पू
         try:
             response = model.generate_content(prompt)
             st.markdown(response.text)
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
-        except Exception:
-            st.warning("मालिक, Google की चाबी अभी एक्टिव हो रही है। 1 मिनट रुकें।")
+            st.session_state.messages.append({"role": "assistant", "content": response.text}
+ 
+        except Exception as e:
+            st.error(f"मालिक, यह एरर आ रहा है: {e}")
