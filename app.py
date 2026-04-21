@@ -51,7 +51,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # API सेटिंग (आपकी चाबी यहाँ है)
-genai.configure(api_key="AIzaSyAL50NrdiVLuRnQQqeOhJhD-Ag-kjUr0WI")
+genai.configure(api_key="AIzaSyB2E2HL2Ky6RUddNzJ_vuO-hpw9BG-d8DA")
 
 # निर्देश और मॉडल सेटिंग
 instruction = "तुम्हारा नाम ZyntroX है। तुम्हें Azam ने बनाया है। तुम हमेशा उन्हें 'मालिक' कहोगे।"
