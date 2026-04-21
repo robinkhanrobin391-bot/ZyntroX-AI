@@ -1,98 +1,55 @@
 import streamlit as st
 import google.generativeai as genai
+import PIL.Image
+from gtts import gTTS
+import base64
+import os
 
-# Meta AI जैसा प्रीमियम लुक देने के लिए CSS
-st.set_page_config(page_title="ZyntroX AI", layout="centered")
+st.set_page_config(page_title="ZyntroX AI", layout="centered", initial_sidebar_state="expanded")
 
 st.markdown("""
     <style>
-    /* बैकग्राउंड और फालतू चीजें छुपाने के लिए */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    
-    /* मेन टाइटल (What can I do for you?) */
-    .main-title {
-        font-size: 38px;
-        font-weight: bold;
-        text-align: center;
-        margin-top: 60px;
-        color: white;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    /* इनपुट बॉक्स को Meta AI जैसा गोल बनाने के लिए */
-    .stChatInputContainer {
-        padding-bottom: 30px;
-    }
-    .stChatInput > div {
-        border-radius: 35px !important;
-        background-color: #252525 !important;
-        border: 1px solid #333 !important;
-    }
-    
-    /* सजेशन बटन्स की स्टाइल (Meta AI स्टाइल) */
-    div.stButton > button {
-        border-radius: 25px;
-        border: 1px solid #333;
-        background-color: transparent;
-        color: white;
-        width: 100%;
-        text-align: left;
-        padding: 12px 20px;
-        margin-bottom: 10px;
-        font-size: 16px;
-    }
-    div.stButton > button:hover {
-        background-color: #252525;
-        border: 1px solid #A855F7;
-    }
+    footer, header, .stDeployButton {visibility: hidden; display: none !important;}
+    .stApp {background-color: #000000;}
+    section[data-testid="stSidebar"] {background-color: #121212 !important; border-right: 1px solid #333;}
+    .main-title {font-size: 38px; font-weight: bold; text-align: center; color: white; margin-top: 30px;}
+    .stChatInput > div {border-radius: 35px !important; background-color: #1c1e21 !important; border: 1px solid #333 !important;}
+    div.stButton > button {border-radius: 25px; border: 1px solid #333; background: transparent; color: white; width: 100%; text-align: left;}
     </style>
     """, unsafe_allow_html=True)
 
-# API सेटिंग (आपकी चाबी यहाँ है)
 genai.configure(api_key="AIzaSyB2E2HL2Ky6RUddNzJ_vuO-hpw9BG-d8DA")
+instruction = "तुम ZyntroX AI हो जिसे Azam ने बनाया है। तुम उन्हें मालिक कहोगे।"
+model = genai.GenerativeModel(model_name='gemini-1.5-flash', system_instruction=instruction)
+with st.sidebar:
+    st.markdown("<h2 style='color:white;'>ZyntroX Menu</h2>", unsafe_allow_html=True)
+    if st.button("🗑️ Clear History"):
+        st.session_state.messages = []
+        st.rerun()
+    uploaded_file = st.file_uploader("➕ Upload Photo", type=["jpg", "png", "jpeg"])
+    st.markdown("<p style='color: #888;'>Developed by Azam</p>", unsafe_allow_html=True)
 
-# निर्देश और मॉडल सेटिंग
-instruction = "तुम्हारा नाम ZyntroX है। तुम्हें Azam ने बनाया है। तुम हमेशा उन्हें 'मालिक' कहोगे।"
-model = genai.GenerativeModel('gemini-1.5-flash')
-
-
-# स्वागत संदेश
 st.markdown('<div class="main-title">What can I do for you?</div>', unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: grey; margin-bottom: 30px;'>Developed by Azam</p>", unsafe_allow_html=True)
 
-# सजेशन बटन्स (Meta AI की तरह)
-col1, col2 = st.columns(2)
-with col1:
-    if st.button("🎬 Animate my photo"):
-        st.info("मालिक, एनीमेशन फीचर जल्द ही आएगा!")
-    if st.button("📚 Learn and grow"):
-        st.info("मालिक, आप क्या नया सीखना चाहते हैं?")
-with col2:
-    if st.button("🎨 Create an image"):
-        st.info("मालिक, मैं इमेज प्रोम्प्ट लिखने में मदद कर सकता हूँ।")
-    if st.button("🔍 Analyse for me"):
-        st.info("मालिक, कुछ भी लिख कर भेजें, मैं उसे एनालाइज करूँगा।")
+if "messages" not in st.session_state: st.session_state.messages = []
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]): st.markdown(msg["content"])
+def speak(text):
+    tts = gTTS(text=text[:500], lang='hi')
+    tts.save("v.mp3")
+    with open("v.mp3", "rb") as f:
+        data = f.read()
+        b64 = base64.b64encode(data).decode()
+        st.markdown(f'<audio autoplay><source src="data:audio/mp3;base64,{b64}" type="audio/mp3"></audio>', unsafe_allow_html=True)
 
-# चैट हिस्ट्री
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-# चैट इनपुट
 if prompt := st.chat_input("Ask ZyntroX AI..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
+    with st.chat_message("user"): st.markdown(prompt)
     with st.chat_message("assistant"):
         try:
-            response = model.generate_content(prompt)
+            content = [prompt, PIL.Image.open(uploaded_file)] if uploaded_file else prompt
+            response = model.generate_content(content)
             st.markdown(response.text)
+            if st.button("🔊 Listen"): speak(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
-        except Exception as e:
-            st.error(f"मालिक, यह एरर आ रहा है: {e}")
+        except Exception as e: st.error("मालिक, कनेक्शन एरर है।")
