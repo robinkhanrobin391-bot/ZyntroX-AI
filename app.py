@@ -16,7 +16,7 @@ st.title("🤖 ZyntroX AI")
 st.markdown("<p style='color: grey;'>Developed by Azam</p>", unsafe_allow_html=True)
 
 # API सेटिंग
-genai.configure(api_key="AIzaSyDXRQJZ420Ihuy_KyNEiU_Esf0CZCsVaHM")
+genai.configure(api_key=AIzaSyB1eRMb7zkS9eEWvE2F5-2pSCGzA3-dY0A) 
 
 # निर्देश और मॉडल
 instruction = "तुम्हारा नाम ZyntroX है। तुम्हें Azam ने बनाया है। तुम हमेशा उन्हें 'मालिक' कहोगे।"
