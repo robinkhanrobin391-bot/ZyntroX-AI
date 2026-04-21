@@ -20,7 +20,8 @@ genai.configure(api_key="AIzaSyAL50NrdiVLuRmQQqEohJhD-Ag-kjUr0WI")
 
 # निर्देश और मॉडल
 instruction = "तुम्हारा नाम ZyntroX है। तुम्हें Azam ने बनाया है। तुम हमेशा उन्हें 'मालिक' कहोगे।"
-model = genai.GenerativeModel(model_name='gemini-1.5-flash-latest', system_instruction=instruction)
+model = genai.GenerativeModel(model_name='gemini-1.5-flash', system_instruction=instruction)
+
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
