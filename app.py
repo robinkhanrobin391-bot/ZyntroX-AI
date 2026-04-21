@@ -38,7 +38,7 @@ if prompt := st.chat_input("नमस्ते मालिक, कुछ पू
         try:
             response = model.generate_content(prompt)
             st.markdown(response.text)
-            st.session_state.messages.append({"role": "assistant", "content": response.text}
+            st.session_state.messages.append({"role": "assistant", "content": response.text})
  
         except Exception as e:
             st.error(f"मालिक, यह एरर आ रहा है: {e}")
