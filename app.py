@@ -1,11 +1,24 @@
 import streamlit as st
 import google.generativeai as genai
 
-st.set_page_config(page_title="ZyntroX AI")
-st.title("🤖 ZyntroX AI")
-st.markdown("### Developed by Azam")
+# प्रीमियम लुक और बटन छुपाने के लिए
+st.set_page_config(page_title="ZyntroX AI", layout="centered")
+st.markdown("""
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    div.stDeployButton {display:none;}
+    </style>
+    """, unsafe_allow_html=True)
 
+st.title("🤖 ZyntroX AI")
+st.markdown("<p style='color: grey;'>Developed by Azam</p>", unsafe_allow_html=True)
+
+# API सेटिंग
 genai.configure(api_key="AIzaSyDXRQJZ420Ihuy_KyNEiU_Esf0CZCsVaHM")
+
+# निर्देश और मॉडल
 instruction = "तुम्हारा नाम ZyntroX है। तुम्हें Azam ने बनाया है। तुम हमेशा उन्हें 'मालिक' कहोगे।"
 model = genai.GenerativeModel(model_name='gemini-1.5-flash', system_instruction=instruction)
 
@@ -20,7 +33,11 @@ if prompt := st.chat_input("नमस्ते मालिक, कुछ पू
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
+    
     with st.chat_message("assistant"):
-        response = model.generate_content(prompt)
-        st.markdown(response.text)
-    st.session_state.messages.append({"role": "assistant", "content": response.text})
+        try:
+            response = model.generate_content(prompt)
+            st.markdown(response.text)
+            st.session_state.messages.append({"role": "assistant", "content": response.text})
+        except Exception:
+            st.warning("मालिक, Google की चाबी अभी एक्टिव हो रही है। 1 मिनट रुकें।")
